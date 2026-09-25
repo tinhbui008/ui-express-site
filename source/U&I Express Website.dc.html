@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0&display=swap" rel="stylesheet" />
+<script src="./geo-maps.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #E9EEF6; -webkit-font-smoothing: antialiased; }
+  a { color: #2E6BB8; text-decoration: none; }
+  a:hover { color: #1B3A6B; }
+  .ms { font-family: 'Material Symbols Outlined'; font-weight: normal; font-style: normal; line-height: 1; letter-spacing: normal; text-transform: none; display: inline-block; white-space: nowrap; direction: ltr; }
+  @keyframes uiRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes uiMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes uiDash { from { stroke-dashoffset: 420; } to { stroke-dashoffset: 0; } }
+  @keyframes uiPulse { 0%,100% { opacity: .35; transform: scale(1); } 50% { opacity: 1; transform: scale(1.35); } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#E9EEF6;font-family:'Be Vietnam Pro',system-ui,sans-serif;color:#2D3748">
+
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:10px 18px;background:#0E1F3D;color:#fff;position:sticky;top:0;z-index:90">
+    <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.14em;font-weight:600;color:#8FB3E4">
+      <span style="width:7px;height:7px;border-radius:50%;background:#F5820D"></span>
+      <span>PROTOTYPE — U&amp;I EXPRESS</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+      <sc-for list="{{ pages }}" as="p" hint-placeholder-count="4">
+        <button onClick="{{ p.go }}" style="{{ p.tabStyle }}">{{ p.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:4px;padding:3px;background:#1B3A6B;border-radius:999px">
+      <button onClick="{{ setDesktop }}" style="{{ deskTabStyle }}"><span class="ms" style="font-size:16px;vertical-align:-3px">desktop_windows</span>&nbsp; Desktop</button>
+      <button onClick="{{ setMobile }}" style="{{ mobTabStyle }}"><span class="ms" style="font-size:16px;vertical-align:-3px">smartphone</span>&nbsp; Mobile</button>
+    </div>
+  </div>
+
+  <div style="{{ frameOuter }}">
+  <div style="{{ frameInner }}" ref="{{ siteRef }}">
+
+    <header style="position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);border-bottom:1px solid #E2E9F3">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;max-width:1280px;margin:0 auto;padding:14px clamp(18px,3.5cqw,44px)">
+        <button onClick="{{ goHome }}" style="display:flex;align-items:center;background:none;border:0;padding:0;cursor:pointer;flex:0 0 auto">
+          <img src="brand/ui-express-logo.png" alt="U&amp;I EXPRESS" style="height:clamp(38px,4.4cqw,54px);width:auto;display:block" />
+        </button>
+
+        <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+          <nav style="display:flex;align-items:center;gap:clamp(14px,1.9cqw,30px);font-size:14.5px;font-weight:500">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+              <a href="{{ n.href }}" onClick="{{ n.go }}" style="{{ n.style }}" style-hover="color:#C81E1E">{{ n.label }}</a>
+            </sc-for>
+          </nav>
+          <div style="display:flex;align-items:center;gap:10px;flex:0 0 auto">
+            <div style="display:flex;flex:0 0 auto;border:1px solid #D5DFEE;border-radius:999px;overflow:hidden;font-size:12px;font-weight:700">
+              <button onClick="{{ setVi }}" style="{{ viBtn }}">VN</button>
+              <button onClick="{{ setEn }}" style="{{ enBtn }}">EN</button>
+            </div>
+            <a href="tel:0982176789" style="display:flex;align-items:center;gap:7px;padding:11px 16px;border:1.5px solid #1B3A6B;border-radius:8px;background:#fff;color:#1B3A6B;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:600;white-space:nowrap;flex:0 0 auto" style-hover="background:#F4F7FB;color:#1B3A6B"><span class="ms" style="font-size:18px">call</span>0982.17.6789</a>
+            <button onClick="{{ goContact }}" style="padding:12px 20px;border:0;border-radius:8px;background:#C81E1E;color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;flex:0 0 auto;box-shadow:0 6px 18px rgba(200,30,30,.28)" style-hover="background:#A81717">{{ t.contactCta }}</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ narrow }}">
+          <div style="display:flex;align-items:center;gap:8px">
+            <button onClick="{{ toggleLang }}" style="padding:8px 10px;border:1px solid #D5DFEE;border-radius:8px;background:#fff;color:#1B3A6B;font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:700;cursor:pointer">{{ langLabel }}</button>
+            <a href="tel:0982176789" aria-label="{{ t.callShort }}" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;border-radius:8px;background:#C81E1E;color:#fff" style-hover="background:#A81717;color:#fff"><span class="ms" style="font-size:20px">call</span></a>
+            <button onClick="{{ toggleMenu }}" style="width:40px;height:40px;display:grid;place-items:center;border:1px solid #D5DFEE;border-radius:8px;background:#fff;color:#1B3A6B;cursor:pointer"><span class="ms" style="font-size:22px">{{ menuIcon }}</span></button>
+          </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ menuOpen }}">
+        <div style="border-top:1px solid #E2E9F3;background:#fff;padding:8px 18px 16px;display:flex;flex-direction:column">
+          <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+            <a href="{{ n.href }}" onClick="{{ n.go }}" style="padding:13px 4px;border-bottom:1px solid #F0F4FA;font-size:15px;font-weight:600;color:#1B3A6B" style-hover="color:#C81E1E">{{ n.label }}</a>
+          </sc-for>
+          <button onClick="{{ goContact }}" style="margin-top:14px;padding:14px;border:1.5px solid #1B3A6B;border-radius:8px;background:#fff;color:#1B3A6B;font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:600;cursor:pointer">{{ t.contactCta }}</button>
+        </div>
+      </sc-if>
+    </header>
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <main>
+      <section style="position:relative;background:#0F2748;background-image:linear-gradient(104deg,#0B1F3D 0%,#16355F 46%,#3A2668 100%);overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:24px 24px;pointer-events:none"></div>
+        <div style="{{ heroArc }}">
+          <svg viewBox="0 0 480 260" style="display:block;width:100%;height:auto">
+            <path d="M52 196 C 150 44, 330 44, 428 116" fill="none" stroke="#F5820D" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="9 9" style="animation:uiDash 9s linear infinite"></path>
+            <path d="M52 196 C 168 214, 320 200, 428 116" fill="none" stroke="#5C8DD0" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 10" opacity=".8" style="animation:uiDash 16s linear infinite"></path>
+            <circle cx="52" cy="196" r="16" fill="#C81E1E" opacity=".2" style="animation:uiPulse 3s ease-in-out infinite;transform-origin:52px 196px"></circle>
+            <circle cx="52" cy="196" r="6.5" fill="#C81E1E" stroke="#fff" stroke-width="2"></circle>
+            <circle cx="428" cy="116" r="16" fill="#F5820D" opacity=".2" style="animation:uiPulse 3s ease-in-out .8s infinite;transform-origin:428px 116px"></circle>
+            <circle cx="428" cy="116" r="6.5" fill="#F5820D" stroke="#fff" stroke-width="2"></circle>
+            <text x="52" y="228" text-anchor="middle" fill="#CFE0F7" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">SGN</text>
+            <text x="428" y="94" text-anchor="middle" fill="#FFD8A6" font-family="Montserrat,sans-serif" font-size="15" font-weight="700" letter-spacing="1.5">USA</text>
+          </svg>
+        </div>
+        <div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(44px,6cqw,92px) clamp(18px,3.5cqw,44px) clamp(38px,4.6cqw,76px);display:grid;gap:clamp(28px,3.4cqw,56px);grid-template-columns:{{ heroCols }};align-items:center;pointer-events:none">
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid rgba(245,130,13,.6);border-radius:999px;background:rgba(245,130,13,.12);color:#FFC178;font-size:12px;font-weight:600;letter-spacing:.08em">
+            <span class="ms" style="font-size:15px">verified</span>{{ t.heroBadge }}
+          </div>
+          <h1 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(30px,4.6cqw,60px);line-height:1.08;letter-spacing:-.02em;color:#fff;margin:18px 0 0;max-width:16em;text-wrap:balance">{{ t.heroTitle }}</h1>
+          <p style="font-size:clamp(14.5px,1.45cqw,18.5px);line-height:1.65;color:#C9DBF2;margin:18px 0 0;max-width:34em">{{ t.heroSub }}</p>
+
+          <div style="pointer-events:auto;display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(26px,3cqw,40px)">
+            <button onClick="{{ goContact }}" style="display:flex;align-items:center;gap:9px;padding:16px 28px;border:0;border-radius:10px;background:#C81E1E;color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:15.5px;font-weight:700;cursor:pointer;box-shadow:0 12px 28px rgba(200,30,30,.32)" style-hover="background:#A81717"><span class="ms" style="font-size:19px">support_agent</span>{{ t.heroCta1 }}</button>
+            <button onClick="{{ goServices }}" style="display:flex;align-items:center;gap:9px;padding:16px 26px;border:1.5px solid rgba(255,255,255,.55);border-radius:10px;background:rgba(255,255,255,.06);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:15.5px;font-weight:600;cursor:pointer" style-hover="background:rgba(255,255,255,.14);border-color:#fff">{{ t.heroCta2 }}<span class="ms" style="font-size:19px">arrow_forward</span></button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:14px 22px;margin-top:24px;color:#D6E6FA;font-size:13.5px;font-weight:600">
+            <span style="display:flex;align-items:center;gap:7px"><span class="ms" style="font-size:17px;color:#F5820D">schedule</span>{{ t.heroP1 }}</span>
+            <span style="display:flex;align-items:center;gap:7px"><span class="ms" style="font-size:17px;color:#F5820D">savings</span>{{ t.heroP2 }}</span>
+            <span style="display:flex;align-items:center;gap:7px"><span class="ms" style="font-size:17px;color:#F5820D">support_agent</span>{{ t.heroP3 }}</span>
+          </div>
+        </div>
+
+        <div style="pointer-events:auto;background:rgba(9,24,48,.72);border:1px solid rgba(255,255,255,.14);border-radius:16px;backdrop-filter:blur(8px);box-shadow:0 24px 60px rgba(4,14,32,.45);overflow:hidden">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04)">
+            <span style="display:flex;align-items:center;gap:9px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.14em;color:#fff">
+              <span class="ms" style="font-size:18px;color:#F5820D">route</span>{{ t.laneTitle }}
+            </span>
+            <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;letter-spacing:.06em;color:#8CE0AE"><span style="width:7px;height:7px;border-radius:50%;background:#33C46E;display:block;animation:uiPulse 2.4s ease-in-out infinite"></span>{{ t.laneLive }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1.15fr .8fr .9fr;gap:10px;padding:11px 20px;border-bottom:1px solid rgba(255,255,255,.08);font-size:10px;font-weight:700;letter-spacing:.12em;color:#7E9DC8">
+            <span>{{ t.laneCol1 }}</span><span>{{ t.laneCol2 }}</span><span style="text-align:right">{{ t.laneCol3 }}</span>
+          </div>
+          <sc-for list="{{ lanes }}" as="l" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:1.15fr .8fr .9fr;gap:10px;align-items:center;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.07);transition:background .18s ease" style-hover="background:rgba(255,255,255,.05)">
+              <span style="display:flex;align-items:center;gap:7px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:#fff;letter-spacing:.02em">
+                {{ l.from }}<span class="ms" style="font-size:15px;color:#F5820D">arrow_right_alt</span>{{ l.to }}
+              </span>
+              <span style="{{ l.chip }}"><span class="ms" style="font-size:14px">{{ l.icon }}</span>{{ l.mode }}</span>
+              <span style="text-align:right;font-family:'Montserrat',sans-serif;font-weight:700;font-size:13.5px;color:#FFD8A6;white-space:nowrap">{{ l.days }}</span>
+            </div>
+          </sc-for>
+          <div style="display:flex;align-items:center;gap:9px;padding:14px 20px;font-size:11.5px;line-height:1.5;color:#8FAAD0">
+            <span class="ms" style="font-size:16px;color:#5C8DD0">info</span>{{ t.laneNote }}
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <section style="background:#fff;border-bottom:1px solid #EDF1F7;padding:clamp(28px,3.2cqw,46px) 0;overflow:hidden">
+        <div style="max-width:1280px;margin:0 auto 20px;padding:0 clamp(18px,3.5cqw,44px);display:flex;align-items:center;gap:14px">
+          <span style="width:26px;height:2px;background:#F5820D;flex:0 0 auto"></span>
+          <p style="margin:0;font-size:11.5px;letter-spacing:.18em;font-weight:700;color:#8595AD">{{ t.partners }}</p>
+        </div>
+        <div style="-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 6%,#000 94%,transparent 100%)">
+        <div style="display:flex;align-items:center;gap:12px;width:max-content;animation:uiMarquee 46s linear infinite">
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/dhl.png" alt="DHL Express" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/fedex.png" alt="FedEx Express" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/ups.png" alt="UPS" style="flex:0 0 auto;height:46px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/singapore-airlines.png" alt="Singapore Airlines" style="flex:0 0 auto;height:40px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/korean-air-cargo.png" alt="Korean Air Cargo" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/china-airlines.png" alt="China Airlines" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/eva-air.png" alt="EVA Air" style="flex:0 0 auto;height:38px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/qatar-airways.png" alt="Qatar Airways" style="flex:0 0 auto;height:40px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/turkish-airlines.png" alt="Turkish Airlines" style="flex:0 0 auto;height:36px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/maersk.png" alt="Maersk" style="flex:0 0 auto;height:38px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/one-ocean-network-express.png" alt="ONE — Ocean Network Express" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/evergreen.png" alt="Evergreen" style="flex:0 0 auto;height:34px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/cosco-shipping.png" alt="COSCO Shipping" style="flex:0 0 auto;height:46px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/dhl.png" alt="" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/fedex.png" alt="" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/ups.png" alt="" style="flex:0 0 auto;height:46px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/singapore-airlines.png" alt="" style="flex:0 0 auto;height:40px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/korean-air-cargo.png" alt="" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/china-airlines.png" alt="" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/eva-air.png" alt="" style="flex:0 0 auto;height:38px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/qatar-airways.png" alt="" style="flex:0 0 auto;height:40px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/turkish-airlines.png" alt="" style="flex:0 0 auto;height:36px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/maersk.png" alt="" style="flex:0 0 auto;height:38px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/one-ocean-network-express.png" alt="" style="flex:0 0 auto;height:44px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/evergreen.png" alt="" style="flex:0 0 auto;height:34px;width:auto;max-width:100%;object-fit:contain" /></div>
+          <div style="flex:0 0 auto;min-width:184px;height:88px;display:grid;place-items:center;padding:0 26px;border:1px solid #E9EEF6;border-radius:12px;background:#FBFCFE;transition:border-color .2s ease,background .2s ease,box-shadow .2s ease" style-hover="border-color:#C9D8EC;background:#fff;box-shadow:0 10px 24px rgba(27,58,107,.08)"><img src="logos/cosco-shipping.png" alt="" style="flex:0 0 auto;height:46px;width:auto;max-width:100%;object-fit:contain" /></div>
+        </div>
+        </div>
+      </section>
+
+      <section id="about" style="background:#1B3A6B;background-image:linear-gradient(115deg,#1B3A6B 0%,#22467E 58%,#5B2A86 100%)">
+        <div style="max-width:1280px;margin:0 auto;padding:clamp(38px,4.6cqw,68px) clamp(18px,3.5cqw,44px);display:grid;gap:clamp(20px,2.6cqw,34px);grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="5">
+            <div style="text-align:center">
+              <div data-count="{{ s.to }}" data-suffix="{{ s.suffix }}" style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(34px,4.2cqw,56px);line-height:1;color:#F5820D;letter-spacing:-.02em">{{ s.display }}</div>
+              <div style="margin-top:10px;font-size:13.5px;font-weight:500;color:#BFD4EE;line-height:1.4">{{ s.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section id="services" style="background:#F4F7FB;padding:clamp(48px,6cqw,96px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px)">
+          <p style="margin:0;font-size:12px;letter-spacing:.18em;font-weight:700;color:#C81E1E">{{ t.svcKicker }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-top:10px">
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(26px,3.2cqw,42px);line-height:1.14;letter-spacing:-.02em;color:#1B3A6B;margin:0;max-width:20em">{{ t.svcTitle }}</h2>
+            <p style="margin:0;max-width:28em;font-size:15px;line-height:1.7;color:#5A6B84">{{ t.svcSub }}</p>
+          </div>
+          <div style="display:grid;gap:18px;margin-top:clamp(26px,3cqw,42px);grid-template-columns:repeat(auto-fit,minmax(248px,1fr))">
+            <sc-for list="{{ services }}" as="s" hint-placeholder-count="7">
+              <div onClick="{{ s.go }}" style="background:#fff;border:1px solid #E5EBF4;border-radius:14px;padding:26px 24px 22px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 18px 38px rgba(27,58,107,.13);border-color:#C9D8EC">
+                <div style="width:52px;height:52px;border-radius:12px;display:grid;place-items:center;background:#EDF3FB;color:#2E6BB8"><span class="ms" style="font-size:27px">{{ s.icon }}</span></div>
+                <h3 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:18px;line-height:1.3;color:#1B3A6B;margin:18px 0 8px">{{ s.title }}</h3>
+                <p style="margin:0;font-size:14px;line-height:1.65;color:#5A6B84">{{ s.desc }}</p>
+                <span style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13.5px;font-weight:600;color:#C81E1E">{{ t.more }}<span class="ms" style="font-size:17px">arrow_forward</span></span>
+              </div>
+            </sc-for>
+            <div onClick="{{ goContact }}" style="border:1.5px dashed #B9CBE4;border-radius:14px;padding:26px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px;background:#EDF3FB;cursor:pointer">
+              <span class="ms" style="font-size:28px;color:#1B3A6B">support_agent</span>
+              <h3 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:17px;color:#1B3A6B;margin:0">{{ t.needOther }}</h3>
+              <span style="font-size:13.5px;font-weight:600;color:#C81E1E">{{ t.contactCta }} →</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#fff;padding:clamp(48px,6cqw,96px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px)">
+          <p style="margin:0;font-size:12px;letter-spacing:.18em;font-weight:700;color:#C81E1E">{{ t.procKicker }}</p>
+          <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(26px,3.2cqw,42px);line-height:1.14;letter-spacing:-.02em;color:#1B3A6B;margin:10px 0 0">{{ t.procTitle }}</h2>
+          <p style="margin:12px 0 0;max-width:44em;font-size:15px;line-height:1.7;color:#5A6B84">{{ t.procSub }}</p>
+          <div style="display:grid;gap:0 clamp(28px,3.4cqw,56px);margin-top:clamp(26px,3cqw,42px);grid-template-columns:{{ stepCols }}">
+            <sc-for list="{{ steps }}" as="s" hint-placeholder-count="8">
+              <div style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px">
+                <div style="display:flex;flex-direction:column;align-items:center">
+                  <div style="{{ s.node }}"><span class="ms" style="font-size:19px">{{ s.icon }}</span></div>
+                  <div style="{{ s.line }}"></div>
+                </div>
+                <div style="padding-bottom:26px;min-width:0">
+                  <div style="display:flex;align-items:baseline;gap:9px">
+                    <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;letter-spacing:.1em;color:#F5820D">{{ s.n }}</span>
+                    <span style="height:1px;flex:1;background:#EDF1F7"></span>
+                    <span style="font-size:10.5px;font-weight:700;letter-spacing:.1em;color:#9AA9BE">{{ s.phase }}</span>
+                  </div>
+                  <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:16px;line-height:1.3;color:#1B3A6B;margin:10px 0 6px">{{ s.title }}</h4>
+                  <p style="margin:0;font-size:13.5px;line-height:1.65;color:#63758E;text-wrap:pretty">{{ s.desc }}</p>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section id="network" style="background:#F4F7FB;padding:clamp(48px,6cqw,96px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px);display:grid;gap:clamp(24px,3cqw,48px);grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+          <div>
+            <p style="margin:0;font-size:12px;letter-spacing:.18em;font-weight:700;color:#C81E1E">{{ t.whKicker }}</p>
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(26px,3.2cqw,40px);line-height:1.14;letter-spacing:-.02em;color:#1B3A6B;margin:10px 0 14px">{{ t.whTitle }}</h2>
+            <p style="margin:0 0 20px;font-size:15px;line-height:1.7;color:#5A6B84">{{ t.whSub }}</p>
+            <div style="background:#fff;border:1px solid #E5EBF4;border-radius:14px;padding:14px"><us-warehouse-map style="display:block;width:100%;max-width:100%;overflow:hidden;min-height:180px"></us-warehouse-map></div>
+          </div>
+          <div style="background:#fff;border:1px solid #E5EBF4;border-radius:14px;overflow:hidden;align-self:start">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #EDF1F7;background:#FBFCFE">
+              <span style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:#1B3A6B;letter-spacing:.02em">{{ t.whList }}</span>
+              <span style="font-size:12px;font-weight:600;color:#F5820D">11 {{ t.whUnit }}</span>
+            </div>
+            <div style="max-height:520px;overflow-y:auto">
+              <sc-for list="{{ warehouses }}" as="w" hint-placeholder-count="11">
+                <div style="display:flex;gap:14px;padding:14px 20px;border-bottom:1px solid #F2F5FA">
+                  <span class="ms" style="font-size:20px;color:#C81E1E;margin-top:2px">location_on</span>
+                  <div>
+                    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:#1B3A6B">{{ w.city }}</div>
+                    <div style="font-size:12.5px;line-height:1.55;color:#6B7C94;margin-top:3px">{{ w.addr }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#fff;padding:clamp(44px,5.4cqw,88px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px)">
+          <div style="text-align:center;max-width:38em;margin:0 auto">
+            <p style="margin:0;font-size:12px;letter-spacing:.18em;font-weight:700;color:#C81E1E">{{ t.cliKicker }}</p>
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(24px,2.9cqw,38px);line-height:1.16;letter-spacing:-.02em;color:#1B3A6B;margin:10px 0 0">{{ t.cliTitle }}</h2>
+            <p style="margin:14px 0 0;font-size:15px;line-height:1.7;color:#5A6B84">{{ t.cliSub }}</p>
+          </div>
+          <div style="display:grid;gap:12px;margin-top:clamp(28px,3.2cqw,44px);grid-template-columns:{{ clientCols }}">
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/ashley.png" alt="Ashley" style="max-width:100%;max-height:70px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/starwood-furniture.png" alt="Starwood Furniture" style="max-width:100%;max-height:70px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/jabil.png" alt="Jabil" style="max-width:100%;max-height:64px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/ton-nam-kim.png" alt="Tôn Nam Kim" style="max-width:100%;max-height:70px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/minh-long.png" alt="Minh Long I" style="max-width:100%;max-height:76px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/esquel-group.png" alt="Esquel Group" style="max-width:100%;max-height:74px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/global-home-usa.png" alt="Global Home USA" style="max-width:100%;max-height:66px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/rk-furniture-gallery.png" alt="RK Furniture Gallery" style="max-width:100%;max-height:70px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/zioncom.png" alt="Zioncom" style="max-width:100%;max-height:62px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/csps.png" alt="CSPS" style="max-width:100%;max-height:64px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/happy-furniture.png" alt="Happy Furniture" style="max-width:100%;max-height:76px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/ming-hao.png" alt="Ming Hao" style="max-width:100%;max-height:70px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/ht.png" alt="HT" style="max-width:100%;max-height:72px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+            <div style="background:#fff;height:116px;display:grid;place-items:center;padding:18px 22px;border:1px solid #E5EBF4;border-radius:12px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-3px);box-shadow:0 14px 30px rgba(27,58,107,.11);border-color:#C9D8EC"><img src="logos/veca.png" alt="VECA" style="max-width:100%;max-height:66px;width:auto;object-fit:contain;transition:transform .22s ease" style-hover="transform:scale(1.05)" /></div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#0F2748;padding:clamp(48px,6cqw,92px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px);display:grid;gap:clamp(24px,3cqw,44px);grid-template-columns:repeat(auto-fit,minmax(300px,1fr));align-items:center">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:9px;padding:8px 15px;border-radius:999px;background:rgba(245,130,13,.14);border:1px solid rgba(245,130,13,.5);color:#FFC178;font-size:12px;font-weight:700;letter-spacing:.08em">
+              <span class="ms" style="font-size:16px">public</span>{{ t.wca }}
+            </div>
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(26px,3.2cqw,42px);line-height:1.14;letter-spacing:-.02em;color:#fff;margin:18px 0 0">{{ t.globalTitle }}</h2>
+            <p style="margin:16px 0 0;font-size:15.5px;line-height:1.75;color:#B7CDEA;max-width:34em">{{ t.globalSub }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:26px">
+              <sc-for list="{{ globalFacts }}" as="g" hint-placeholder-count="3">
+                <div style="flex:1 1 150px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px">
+                  <div style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:24px;color:#F5820D">{{ g.v }}</div>
+                  <div style="font-size:12.5px;color:#A9C2E2;margin-top:4px">{{ g.l }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:12px"><world-network-map style="display:block;width:100%;max-width:100%;overflow:hidden;min-height:160px"></world-network-map></div>
+        </div>
+      </section>
+
+      <section id="news" style="background:#fff;padding:clamp(48px,6cqw,92px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px)">
+          <p style="margin:0;font-size:12px;letter-spacing:.18em;font-weight:700;color:#C81E1E">{{ t.newsKicker }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;justify-content:space-between;margin-top:10px">
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(26px,3.2cqw,40px);line-height:1.14;letter-spacing:-.02em;color:#1B3A6B;margin:0;max-width:22em">{{ t.newsTitle }}</h2>
+            <a href="#news" style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:#2E6BB8;white-space:nowrap" style-hover="color:#C81E1E">{{ t.allNews }}<span class="ms" style="font-size:17px">arrow_forward</span></a>
+          </div>
+          <div style="display:grid;gap:18px;margin-top:clamp(24px,2.8cqw,38px);grid-template-columns:repeat(auto-fit,minmax(268px,1fr))">
+            <sc-for list="{{ news }}" as="n" hint-placeholder-count="3">
+              <a href="#news" style="display:flex;flex-direction:column;background:#F4F7FB;border:1px solid #E5EBF4;border-radius:14px;padding:24px 22px;transition:transform .18s ease,box-shadow .18s ease" style-hover="transform:translateY(-4px);box-shadow:0 18px 38px rgba(27,58,107,.12)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="padding:5px 10px;border-radius:6px;background:#EDF3FB;color:#2E6BB8;font-size:10.5px;font-weight:700;letter-spacing:.1em">{{ n.tag }}</span>
+                  <span style="font-size:12.5px;color:#8595AD">{{ n.date }}</span>
+                </div>
+                <h3 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:17px;line-height:1.36;color:#1B3A6B;margin:16px 0 8px">{{ n.title }}</h3>
+                <p style="margin:0;font-size:13.5px;line-height:1.65;color:#5A6B84">{{ n.desc }}</p>
+                <span style="display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:13.5px;font-weight:600;color:#C81E1E">{{ t.readMore }}<span class="ms" style="font-size:16px">arrow_forward</span></span>
+              </a>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#C81E1E;background-image:linear-gradient(100deg,#C81E1E 0%,#9E1616 62%,#5B2A86 100%)">
+        <div style="max-width:1280px;margin:0 auto;padding:clamp(38px,4.6cqw,68px) clamp(18px,3.5cqw,44px);display:flex;flex-wrap:wrap;gap:26px;align-items:center;justify-content:space-between">
+          <div>
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(24px,2.9cqw,38px);line-height:1.18;color:#fff;margin:0;max-width:22em">{{ t.ctaTitle }}</h2>
+            <p style="margin:12px 0 0;font-size:15px;color:rgba(255,255,255,.82)">{{ t.ctaSub }}</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <button onClick="{{ goContact }}" style="padding:16px 28px;border:0;border-radius:10px;background:#fff;color:#C81E1E;font-family:'Be Vietnam Pro',sans-serif;font-size:15.5px;font-weight:700;cursor:pointer" style-hover="background:#FFF1F1">{{ t.contactCta }}</button>
+            <a href="tel:0982176789" style="display:flex;align-items:center;gap:9px;padding:16px 26px;border:1.5px solid rgba(255,255,255,.6);border-radius:10px;color:#fff;font-size:15.5px;font-weight:600"><span class="ms" style="font-size:19px">call</span>0982.17.6789</a>
+          </div>
+        </div>
+      </section>
+    </main>
+    </sc-if>
+
+    <sc-if value="{{ isService }}">
+    <main>
+      <section style="position:relative;background:#0F2748;overflow:hidden">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(98deg,#0B1F3D 0%,#16355F 58%,#3A2668 100%)"></div>
+        <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:22px 22px;pointer-events:none"></div>
+        <div style="position:absolute;right:2%;bottom:-14%;width:min(34%,300px);opacity:.35;pointer-events:none">
+          <svg viewBox="0 0 300 140" style="display:block;width:100%;height:auto">
+            <path d="M14 118 C 96 26, 214 26, 288 74" fill="none" stroke="#F5820D" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="9 9" style="animation:uiDash 10s linear infinite"></path>
+            <circle cx="14" cy="118" r="5.5" fill="#C81E1E" stroke="#fff" stroke-width="2"></circle>
+            <circle cx="288" cy="74" r="5.5" fill="#F5820D" stroke="#fff" stroke-width="2"></circle>
+          </svg>
+        </div>
+        <div style="position:relative;max-width:1280px;margin:0 auto;padding:clamp(36px,4.6cqw,72px) clamp(18px,3.5cqw,44px);pointer-events:none">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#9FBEE4;pointer-events:auto">
+            <a href="#home" onClick="{{ goHome }}" style="color:#9FBEE4" style-hover="color:#fff">{{ t.navHome }}</a><span>/</span><a href="#services" onClick="{{ goServices }}" style="color:#9FBEE4" style-hover="color:#fff">{{ t.navServices }}</a><span>/</span><span style="color:#fff">{{ spCrumb }}</span>
+          </div>
+          <h1 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(28px,3.9cqw,50px);line-height:1.1;letter-spacing:-.02em;color:#fff;margin:16px 0 0;max-width:20em">{{ spTitle }}</h1>
+          <p style="margin:16px 0 0;max-width:38em;font-size:15.5px;line-height:1.7;color:#C9DBF2">{{ spTag }}</p>
+        </div>
+      </section>
+
+      <section style="background:#fff;padding:clamp(40px,5cqw,80px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px);display:grid;gap:clamp(24px,3cqw,44px);grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+          <div>
+            <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(22px,2.6cqw,32px);color:#1B3A6B;margin:0 0 16px">{{ t.svcAbout }}</h2>
+            <p style="margin:0 0 14px;font-size:15.5px;line-height:1.8;color:#4A5A72">{{ spLead1 }}</p>
+            <p style="margin:0;font-size:15.5px;line-height:1.8;color:#4A5A72">{{ spLead2 }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px">
+              <sc-for list="{{ svcTabs }}" as="s" hint-placeholder-count="7">
+                <button onClick="{{ s.go }}" style="{{ s.style }}">{{ s.title }}</button>
+              </sc-for>
+            </div>
+            <div style="display:grid;gap:12px;margin-top:26px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))">
+              <sc-for list="{{ svcSpecs }}" as="s" hint-placeholder-count="4">
+                <div style="border:1px solid #E5EBF4;border-radius:12px;padding:16px 18px;background:#F9FBFE">
+                  <div style="font-size:12px;font-weight:600;color:#8595AD;letter-spacing:.06em">{{ s.l }}</div>
+                  <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:17px;color:#1B3A6B;margin-top:6px">{{ s.v }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div>
+            <div style="background:#F4F7FB;border:1px solid #E5EBF4;border-radius:16px;padding:clamp(22px,2.4cqw,32px)">
+              <h3 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:19px;color:#1B3A6B;margin:0 0 18px">{{ t.svcBenefits }}</h3>
+              <div style="display:flex;flex-direction:column;gap:14px">
+                <sc-for list="{{ benefits }}" as="b" hint-placeholder-count="6">
+                  <div style="display:flex;gap:12px;align-items:flex-start">
+                    <span class="ms" style="font-size:21px;color:#1E9E5A;flex:0 0 auto">check_circle</span>
+                    <div>
+                      <div style="font-weight:600;font-size:14.5px;color:#1B3A6B">{{ b.t }}</div>
+                      <div style="font-size:13.5px;line-height:1.6;color:#63758E;margin-top:2px">{{ b.d }}</div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ goContact }}" style="width:100%;margin-top:24px;padding:15px;border:0;border-radius:10px;background:#C81E1E;color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#A81717">{{ t.contactCta }}</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#F4F7FB;padding:clamp(40px,5cqw,80px) 0">
+        <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px)">
+          <h2 style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:clamp(22px,2.6cqw,34px);color:#1B3A6B;margin:0 0 6px">{{ t.svcFlow }}</h2>
+          <p style="margin:0 0 30px;font-size:15px;color:#5A6B84">{{ t.svcFlowSub }}</p>
+          <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+            <sc-for list="{{ svcFlow }}" as="s" hint-placeholder-count="5">
+              <div style="background:#fff;border:1px solid #E5EBF4;border-radius:12px;padding:22px 20px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <span class="ms" style="font-size:26px;color:#2E6BB8">{{ s.icon }}</span>
+                  <span style="font-family:'Montserrat',sans-serif;font-weight:800;font-size:26px;color:#EDF1F7">{{ s.n }}</span>
+                </div>
+                <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:15.5px;color:#1B3A6B;margin:14px 0 6px">{{ s.title }}</h4>
+                <p style="margin:0;font-size:13.5px;line-height:1.6;color:#63758E">{{ s.desc }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+    </main>
+    </sc-if>
+
+    <footer id="contact" style="background:#0E1F3D;color:#B7CDEA;padding:clamp(40px,5cqw,76px) 0 0">
+      <div style="max-width:1280px;margin:0 auto;padding:0 clamp(18px,3.5cqw,44px);display:grid;gap:clamp(26px,3cqw,44px);grid-template-columns:repeat(auto-fit,minmax(230px,1fr))">
+        <div>
+          <img src="brand/ui-express-logo-light.png" alt="U&amp;I EXPRESS" style="height:52px;width:auto;display:block;margin:0 0 18px" />
+          <p style="margin:0;font-size:13.5px;line-height:1.75;color:#8FAAD0;max-width:26em">U&amp;I LOGISTIC — hơn 15 năm giao nhận vận tải quốc tế, chuyên tuyến Việt Nam ⇄ Hoa Kỳ. Thành viên hiệp hội WCA.</p>
+          <div style="display:flex;gap:10px;margin-top:20px">
+            <sc-for list="{{ socials }}" as="s" hint-placeholder-count="4">
+              <a href="#social" style="width:38px;height:38px;border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#C9DBF2;transition:all .15s ease" style-hover="background:#F5820D;border-color:#F5820D;color:#fff"><span class="ms" style="font-size:19px">{{ s }}</span></a>
+            </sc-for>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;color:#fff;margin:0 0 16px">TRỤ SỞ VIỆT NAM</h4>
+          <div style="display:flex;flex-direction:column;gap:14px;font-size:13.5px;line-height:1.7;color:#8FAAD0">
+            <div><strong style="color:#C9DBF2;font-weight:600">Tân Bình, TP. HCM</strong><br />Lô 12–14, đường Nguyễn Văn Trỗi, P. 8, Q. Tân Bình</div>
+            <div><strong style="color:#C9DBF2;font-weight:600">Thủ Dầu Một, Bình Dương</strong><br />Số 8, Đại lộ Bình Dương, P. Phú Hoà</div>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;color:#fff;margin:0 0 16px">TRỤ SỞ HOA KỲ</h4>
+          <div style="display:flex;flex-direction:column;gap:14px;font-size:13.5px;line-height:1.7;color:#8FAAD0">
+            <div><strong style="color:#C9DBF2;font-weight:600">Carson, California</strong><br />1234 E Dominguez St, Carson, CA 90746</div>
+            <div><strong style="color:#C9DBF2;font-weight:600">Savannah, Georgia</strong><br />145 Bourne Ave, Savannah, GA 31408</div>
+          </div>
+        </div>
+        <div>
+          <h4 style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;letter-spacing:.12em;color:#fff;margin:0 0 16px">LIÊN HỆ NHANH</h4>
+          <div style="font-size:13.5px;line-height:1.7;color:#8FAAD0">
+            <div style="color:#C9DBF2;font-weight:600">Mr. Khoi</div>
+            <div style="font-size:12.5px;margin-bottom:12px">Chủ tịch HĐQT</div>
+            <a href="tel:0982176789" style="display:flex;align-items:center;gap:8px;color:#F5820D;font-weight:700;font-size:16px"><span class="ms" style="font-size:18px">call</span>0982.17.6789</a>
+            <a href="mailto:chuyenphatnhanh.ui@gmail.com" style="display:flex;align-items:center;gap:8px;margin-top:8px;color:#8FAAD0;font-size:13.5px;word-break:break-all"><span class="ms" style="font-size:17px">mail</span>chuyenphatnhanh.ui@gmail.com</a>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:9px;margin-top:20px">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+              <a href="{{ n.href }}" onClick="{{ n.go }}" style="font-size:13.5px;color:#8FAAD0;transition:color .15s ease" style-hover="color:#F5820D">{{ n.label }}</a>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      <div style="max-width:1280px;margin:clamp(30px,3.4cqw,52px) auto 0;padding:20px clamp(18px,3.5cqw,44px);border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:12.5px;color:#6E8AB4">
+        <span>© 2026 U&amp;I LOGISTIC Co., Ltd. — Tất cả quyền được bảo lưu.</span>
+        <span style="display:flex;gap:18px"><a href="#privacy" style="color:#6E8AB4">Chính sách bảo mật</a><a href="#terms" style="color:#6E8AB4">Điều khoản dịch vụ</a></span>
+      </div>
+    </footer>
+
+  </div>
+  </div>
+
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300"><rect width="400" height="300" fill="#1B3A6B" /><g transform="translate(200 150)"><text x="0" y="-6" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="60" fill="#E8433F">U&amp;I</text><text x="0" y="26" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="700" font-size="24" letter-spacing="6" fill="#FFFFFF">EXPRESS</text><path d="M-70 44 C -20 66, 20 66, 70 44" fill="none" stroke="#F5820D" stroke-width="9" stroke-linecap="round" /></g></svg>
+  </template>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1000}}">
+const VI = {
+  navHome: 'Trang chủ', navAbout: 'Về chúng tôi', navServices: 'Dịch vụ', navNetwork: 'Mạng lưới kho', navNews: 'Tin tức', navContact: 'Liên hệ',
+  contactCta: 'Liên hệ tư vấn', callShort: 'Gọi ngay', more: 'Xem chi tiết',
+  heroCta1: 'Liên hệ tư vấn', heroCta2: 'Xem dịch vụ',
+  heroBadge: 'HƠN 15 NĂM GIAO NHẬN QUỐC TẾ',
+  heroTitle: 'Giao nhận quốc tế — Chuyên tuyến Việt Nam ⇄ Hoa Kỳ',
+  heroSub: 'Door-to-door từ kho người gửi tại Việt Nam đến tận địa chỉ nhận tại Hoa Kỳ. Chứng từ, hải quan, trucking và kho CFS do một đầu mối U&I Express phụ trách — chi phí tối ưu, lịch trình cam kết.',
+  heroP1: 'Air 3–5 ngày · Sea 22–28 ngày', heroP2: 'Tiết kiệm 12–25% chi phí', heroP3: 'Theo dõi 24/7',
+  laneTitle: 'LỊCH TRÌNH TIÊU BIỂU', laneLive: 'ĐANG KHAI THÁC',
+  laneCol1: 'TUYẾN', laneCol2: 'PHƯƠNG THỨC', laneCol3: 'THỜI GIAN',
+  laneNote: 'Thời gian tính từ khi hàng rời kho tại Việt Nam đến khi giao tận địa chỉ nhận.',
+  partners: 'ĐỐI TÁC HÃNG BAY, HÃNG TÀU & CHUYỂN PHÁT',
+  svcKicker: 'DỊCH VỤ', svcTitle: 'Bảy nhóm dịch vụ phủ toàn bộ chuỗi giao nhận',
+  svcSub: 'Từ đặt chỗ hãng bay đến giao hàng chặng cuối tại Mỹ — chọn từng dịch vụ riêng hoặc để U&I lo trọn gói.',
+  needOther: 'Cần giải pháp riêng cho lô hàng của bạn?',
+  procKicker: 'QUY TRÌNH', procTitle: 'Quy trình Door-to-Door 8 bước',
+  procSub: 'Mỗi bước có người phụ trách và mốc thời gian rõ ràng. Khách hàng nhận cập nhật liên tục qua email, Zalo và điện thoại trực tiếp từ chuyên viên phụ trách.',
+  whKicker: 'MẠNG LƯỚI KHO', whTitle: '11 kho khai thác tại Hoa Kỳ',
+  whSub: 'Kho CFS và kho trung chuyển trải khắp ba bờ Đông – Tây – Trung, giúp gom hàng, lưu kho và phân phối nội địa Mỹ ngay sau thông quan.',
+  whList: 'DANH SÁCH KHO', whUnit: 'địa điểm',
+  cliKicker: 'KHÁCH HÀNG', cliTitle: 'Được tin dùng bởi các nhà sản xuất và thương hiệu xuất khẩu',
+  cliSub: 'Từ nội thất, thép, gốm sứ đến điện tử và dệt may — U&I đồng hành cùng các doanh nghiệp xuất khẩu Việt Nam trên tuyến Hoa Kỳ.',
+  wca: 'THÀNH VIÊN HIỆP HỘI WCA', globalTitle: 'Mạng lưới toàn cầu, năng lực nội địa',
+  globalSub: 'Là thành viên WCA — mạng lưới giao nhận độc lập lớn nhất thế giới — U&I Express kết nối hơn 200 quốc gia và vùng lãnh thổ thông qua các đại lý được thẩm định tài chính.',
+  ctaTitle: 'Cần tư vấn phương án vận chuyển? Phản hồi trong 24 giờ.',
+  ctaSub: 'Gọi hotline hoặc gửi email, chuyên viên tuyến Hoa Kỳ sẽ trao đổi trực tiếp với bạn.',
+  svc3Title: 'Chuyển phát nhanh',
+  svcPageTitle: 'Chuyển phát nhanh quốc tế DHL · FedEx · UPS',
+  svcPageSub: 'Giải pháp nhanh nhất cho hàng mẫu, tài liệu, hàng thương mại điện tử và lô hàng gấp đi Hoa Kỳ, Canada, EU và hơn 200 quốc gia.',
+  svcAbout: 'Về dịch vụ', svcBenefits: 'Lợi ích khi đi cùng U&I',
+  svcFlow: 'Sơ đồ quy trình chuyển phát nhanh', svcFlowSub: 'Từ lúc nhận yêu cầu đến khi có bằng chứng giao hàng (POD).',
+  trackTitle: 'Tra cứu vận đơn U&I Express',
+  trackSub: 'Nhập mã vận đơn U&I hoặc mã AWB của hãng để xem toàn bộ hành trình lô hàng theo thời gian thực.',
+  trackNo: 'MÃ VẬN ĐƠN', delivered: 'Đã giao thành công — có bằng chứng giao hàng (POD)', pod: 'Tải bằng chứng giao hàng',
+  quoteTitle: 'Yêu cầu báo giá vận chuyển', quoteSub: 'Bốn bước, khoảng hai phút. Chuyên viên phản hồi trong 24 giờ làm việc.',
+  q1Title: 'Bạn cần dịch vụ nào?', q1Sub: 'Chọn một dịch vụ chính, có thể ghi chú thêm ở bước cuối.',
+  q2Title: 'Tuyến đi và điểm đến', q2Sub: 'Càng cụ thể địa chỉ, báo giá càng chính xác.',
+  q2From: 'Điểm đi', q2To: 'Điểm đến', q2Term: 'Điều kiện giao hàng', q2Ready: 'Ngày hàng sẵn sàng',
+  q3Title: 'Thông tin hàng hoá', q3Sub: 'Trọng lượng và kích thước quyết định trọng lượng tính phí.',
+  q3Note: 'Hàng đi air tính theo trọng lượng quy đổi: Dài × Rộng × Cao (cm) ÷ 5000. U&I cân lại tại kho và báo chênh lệch trước khi phát hành vận đơn.',
+  q4Title: 'Thông tin liên hệ', q4Sub: 'Chúng tôi chỉ dùng thông tin này để gửi báo giá.',
+  q4Note: 'Ghi chú thêm',
+  q4Note2: 'Chuyên viên tuyến Hoa Kỳ sẽ gọi lại trong 24 giờ làm việc, kèm bảng giá chi tiết theo từng phương án.',
+  newsKicker: 'TIN TỨC & CẬP NHẬT', newsTitle: 'Thông tin tuyến vận chuyển và quy định mới nhất', readMore: 'Đọc tiếp', allNews: 'Xem tất cả tin tức',
+  back: 'Quay lại', next: 'Tiếp tục', submit: 'Gửi yêu cầu báo giá',
+  steps: ['Dịch vụ', 'Tuyến đường', 'Hàng hoá', 'Liên hệ']
+};
+
+const EN = {
+  navHome: 'Home', navAbout: 'About us', navServices: 'Services', navNetwork: 'Warehouses', navNews: 'News', navContact: 'Contact',
+  contactCta: 'Talk to us', callShort: 'Call now', more: 'Learn more',
+  heroCta1: 'Talk to a specialist', heroCta2: 'Our services',
+  heroBadge: '15+ YEARS IN INTERNATIONAL FREIGHT',
+  heroTitle: 'International freight forwarding — Vietnam ⇄ USA specialists',
+  heroSub: 'True door-to-door from the shipper\u2019s warehouse in Vietnam to the final address in the United States. Documentation, customs, US trucking and CFS warehousing handled by one U&I Express team — optimised cost, committed schedule.',
+  heroP1: 'Air 3–5 days · Sea 22–28 days', heroP2: 'Save 12–25% on freight', heroP3: '24/7 tracking',
+  laneTitle: 'KEY LANES WE OPERATE', laneLive: 'IN SERVICE',
+  laneCol1: 'LANE', laneCol2: 'MODE', laneCol3: 'TRANSIT',
+  laneNote: 'Transit measured from warehouse pickup in Vietnam to delivery at the final US address.',
+  partners: 'AIRLINE, OCEAN CARRIER & EXPRESS PARTNERS',
+  svcKicker: 'SERVICES', svcTitle: 'Seven service lines covering the whole freight chain',
+  svcSub: 'From airline booking to US final-mile delivery — take a single service or let U&I handle end to end.',
+  needOther: 'Need a tailored solution for your shipment?',
+  procKicker: 'PROCESS', procTitle: 'The 8-step door-to-door process',
+  procSub: 'Every step has a named owner and a committed time frame. Customers get continuous updates by email, Zalo and directly from their named specialist.',
+  whKicker: 'WAREHOUSE NETWORK', whTitle: '11 operating warehouses across the USA',
+  whSub: 'CFS and transit warehouses on the East, West and Gulf coasts for consolidation, storage and US domestic distribution right after clearance.',
+  whList: 'WAREHOUSE LIST', whUnit: 'locations',
+  cliKicker: 'CLIENTS', cliTitle: 'Trusted by leading manufacturers and export brands',
+  cliSub: 'From furniture, steel and ceramics to electronics and textiles — U&I supports Vietnamese exporters on the US lane.',
+  wca: 'WCA NETWORK MEMBER', globalTitle: 'Global network, local capability',
+  globalSub: 'As a member of WCA — the world\u2019s largest network of independent forwarders — U&I Express connects more than 200 countries and territories through financially vetted agents.',
+  ctaTitle: 'Need advice on your shipment? We reply within 24 hours.',
+  ctaSub: 'Call the hotline or email us and our US-lane specialist will get straight back to you.',
+  svc3Title: 'Express delivery',
+  svcPageTitle: 'International express — DHL · FedEx · UPS',
+  svcPageSub: 'The fastest option for samples, documents, e-commerce parcels and urgent shipments to the USA, Canada, EU and 200+ countries.',
+  svcAbout: 'About this service', svcBenefits: 'Why ship with U&I',
+  svcFlow: 'Express process flow', svcFlowSub: 'From request to proof of delivery (POD).',
+  trackTitle: 'Track your U&I Express shipment',
+  trackSub: 'Enter your U&I reference or carrier AWB to see the full journey of your shipment in real time.',
+  trackNo: 'TRACKING NUMBER', delivered: 'Delivered successfully — proof of delivery available', pod: 'Download POD',
+  quoteTitle: 'Request a freight quote', quoteSub: 'Four steps, about two minutes. A specialist replies within 24 business hours.',
+  q1Title: 'Which service do you need?', q1Sub: 'Pick one main service; you can add notes in the final step.',
+  q2Title: 'Origin and destination', q2Sub: 'The more precise the address, the more accurate the quote.',
+  q2From: 'Origin', q2To: 'Destination', q2Term: 'Delivery terms', q2Ready: 'Cargo ready date',
+  q3Title: 'Cargo details', q3Sub: 'Weight and dimensions determine the chargeable weight.',
+  q3Note: 'Air freight uses volumetric weight: L × W × H (cm) ÷ 5000. U&I re-weighs at the warehouse and reports any difference before issuing the AWB.',
+  q4Title: 'Contact details', q4Sub: 'We only use these details to send your quote.',
+  q4Note: 'Additional notes',
+  q4Note2: 'Our US-lane specialist will call you back within 24 business hours with a detailed rate sheet per option.',
+  newsKicker: 'NEWS & UPDATES', newsTitle: 'Latest lane information and regulatory updates', readMore: 'Read more', allNews: 'See all news',
+  back: 'Back', next: 'Continue', submit: 'Send quote request',
+  steps: ['Service', 'Route', 'Cargo', 'Contact']
+};
+
+const SERVICES = [
+  { icon: 'flight', vi: ['Vận chuyển hàng không', 'Đặt chỗ trực tiếp với hơn 20 hãng bay, ưu tiên tuyến SGN → LAX/ORD/JFK, hàng đi trong 3–5 ngày.'], en: ['Air freight', 'Direct allocation with 20+ carriers, priority on SGN → LAX/ORD/JFK, transit 3–5 days.'] },
+  { icon: 'directions_boat', vi: ['Vận chuyển đường biển', 'FCL và LCL đi các cảng chính Hoa Kỳ: Los Angeles, Savannah, Houston, New York.'], en: ['Ocean freight', 'FCL and LCL to major US ports: Los Angeles, Savannah, Houston, New York.'] },
+  { icon: 'bolt', vi: ['Chuyển phát nhanh (DHL/FedEx/UPS)', 'Đại lý uỷ quyền, giá chiết khấu theo hợp đồng, nhận hàng tận nơi trong ngày.'], en: ['Express (DHL/FedEx/UPS)', 'Authorised agent with contracted discounts and same-day door pickup.'] },
+  { icon: 'assignment', vi: ['Khai báo hải quan', 'Hoàn thiện C/O, kiểm dịch, hun trùng và thông quan xuất – nhập hai đầu Việt Nam và Mỹ.'], en: ['Customs brokerage', 'C/O, phytosanitary, fumigation and clearance on both the Vietnam and US side.'] },
+  { icon: 'local_shipping', vi: ['Trucking tại Hoa Kỳ', 'Đội xe và đối tác vận tải phủ 48 bang, giao hàng vào kho Amazon, Walmart, Ashley.'], en: ['US trucking', 'Own fleet and partners across 48 states, delivering into Amazon, Walmart and Ashley DCs.'] },
+  { icon: 'warehouse', vi: ['Kho CFS tại Hoa Kỳ', '11 kho khai thác, gom hàng, dán nhãn, lưu kho ngắn hạn và xử lý hàng trả.'], en: ['US CFS warehousing', '11 operating warehouses for consolidation, labelling, short-term storage and returns.'] },
+  { icon: 'shopping_cart', vi: ['E-pack / Amazon FBA', 'Giải pháp thương mại điện tử: gửi hàng vào FBA, dropship và fulfillment từ kho Mỹ.'], en: ['E-pack / Amazon FBA', 'E-commerce solutions: FBA inbound, dropship and fulfilment from our US warehouses.'] }
+];
+
+const STEPS = [
+  { vi: ['Nhận yêu cầu', 'Tiếp nhận qua hotline, email hoặc Zalo; xác nhận trong 24 giờ.'], en: ['Receive request', 'Via hotline, email or Zalo; confirmed within 24 hours.'] },
+  { vi: ['Nhận hàng tại kho người gửi', 'Xe U&I đến lấy hàng theo giờ hẹn tại TP. HCM, Bình Dương và các tỉnh.'], en: ['Pickup at shipper', 'U&I trucks collect at the agreed slot in HCMC, Binh Duong and nearby provinces.'] },
+  { vi: ['Chuẩn bị chứng từ', 'Invoice, packing list, C/O, giấy phép chuyên ngành — kiểm tra chéo trước khi khai.'], en: ['Prepare documents', 'Invoice, packing list, C/O and permits — cross-checked before filing.'] },
+  { vi: ['Đóng gói chuẩn hãng', 'Đóng thùng, chèn lót, pallet hoá và dán nhãn theo yêu cầu của hãng vận chuyển.'], en: ['Carrier-standard packing', 'Cartons, cushioning, palletising and labelling to carrier requirements.'] },
+  { vi: ['Cân & báo chênh lệch', 'Cân và đo tại kho, thông báo trọng lượng tính phí trước khi phát hành vận đơn.'], en: ['Re-weigh & report', 'Weighed and measured at our warehouse; chargeable weight confirmed before AWB.'] },
+  { vi: ['Tạo vận đơn điện tử', 'Phát hành AWB/BL điện tử và gửi ngay cho khách hàng qua email, Zalo.'], en: ['Issue e-AWB', 'Electronic AWB/BL issued and sent to you straight away by email or Zalo.'] },
+  { vi: ['Chuyển tới hãng DHL/FedEx/UPS', 'Bàn giao trực tiếp tại gateway hãng trong ngày, xác nhận đã nhận hàng.'], en: ['Hand over to carrier', 'Delivered to the carrier gateway same day with receipt confirmation.'] },
+  { vi: ['Theo dõi 24/7 & POD', 'Chuyên viên theo dõi hành trình, chủ động báo mốc và gửi bằng chứng giao hàng.'], en: ['24/7 monitoring & POD', 'Your specialist monitors every milestone and sends proof of delivery.'] }
+];
+
+const WAREHOUSES = [
+  ['Savannah, GA', '145 Bourne Ave, Savannah, GA 31408 — kho CFS chính bờ Đông'],
+  ['Carson, CA', '1234 E Dominguez St, Carson, CA 90746 — trụ sở Hoa Kỳ'],
+  ['Los Angeles, CA', '2450 S Alameda St, Los Angeles, CA 90058 — gom hàng bờ Tây'],
+  ['New Jersey', '85 Doremus Ave, Newark, NJ 07105 — cửa ngõ vùng Đông Bắc'],
+  ['Houston, TX', '8600 Wallisville Rd, Houston, TX 77029 — kho vùng Vịnh'],
+  ['Dallas, TX', '2100 W Danieldale Rd, Dallas, TX 75115 — trung chuyển nội địa'],
+  ['Chicago, IL', '1400 W 43rd St, Chicago, IL 60609 — kho vùng Trung Tây'],
+  ['Atlanta, GA', '4700 Fulton Industrial Blvd, Atlanta, GA 30336 — phân phối Đông Nam'],
+  ['Charlotte, NC', '9820 Statesville Rd, Charlotte, NC 28269 — kho phụ trợ'],
+  ['Miami, FL', '7950 NW 21st St, Miami, FL 33122 — cửa ngõ Latin America'],
+  ['Seattle, WA', '18000 W Valley Hwy, Kent, WA 98032 — kho bờ Tây Bắc']
+];
+
+const SVCPAGE = [
+  {
+    vi: ['Vận chuyển hàng không quốc tế', 'U&I Express có hợp đồng sản lượng trực tiếp với hơn 20 hãng bay, ưu tiên tải trên các tuyến SGN → LAX, ORD, JFK và SEA. Lô hàng được đặt chỗ, cân đo và bàn giao gateway trong cùng ngày nhận hàng.', 'Chúng tôi xử lý được cả hàng nguyên chuyến (charter), hàng quá khổ và hàng cần bảo quản đặc biệt, kèm bảo hiểm hàng hoá theo giá trị khai báo.'],
+    en: ['International air freight', 'U&I Express holds direct volume agreements with 20+ airlines, with priority allocation on SGN → LAX, ORD, JFK and SEA. Shipments are booked, weighed and handed to the gateway on the same day we collect them.', 'We also handle charters, out-of-gauge cargo and temperature-sensitive goods, with cargo insurance at declared value.'],
+    specs: { vi: [['THỜI GIAN VẬN CHUYỂN', '3–5 ngày làm việc'], ['TRỌNG LƯỢNG', 'Từ 45 kg trở lên'], ['TUYẾN CHÍNH', 'SGN → LAX / ORD / JFK'], ['NHẬN HÀNG', 'Tận nơi, trong ngày']], en: [['TRANSIT TIME', '3–5 business days'], ['WEIGHT', 'From 45 kg'], ['KEY LANES', 'SGN → LAX / ORD / JFK'], ['PICKUP', 'Door, same day']] }
+  },
+  {
+    vi: ['Vận chuyển đường biển FCL & LCL', 'Chỗ ổn định với Maersk, ONE, Evergreen và CMA CGM đi các cảng chính Hoa Kỳ: Los Angeles, Savannah, Houston và New York. U&I gom hàng LCL hằng tuần tại kho Tân Bình.', 'Sau khi thông quan, hàng có thể chuyển thẳng vào kho CFS của U&I tại Mỹ để lưu, gom hoặc phân phối nội địa — không cần thêm nhà cung cấp thứ hai.'],
+    en: ['Ocean freight — FCL & LCL', 'Stable allocation with Maersk, ONE, Evergreen and CMA CGM to the main US ports: Los Angeles, Savannah, Houston and New York. U&I consolidates LCL weekly at our Tan Binh warehouse.', 'After clearance, cargo can move straight into a U&I CFS warehouse in the US for storage, consolidation or domestic distribution — no second vendor needed.'],
+    specs: { vi: [['THỜI GIAN VẬN CHUYỂN', '22–28 ngày'], ['LOẠI HÀNG', 'FCL 20\u2019/40\u2019 · LCL'], ['CẢNG ĐẾN', 'LAX · SAV · HOU · NYC'], ['GOM HÀNG LCL', 'Hằng tuần, thứ Tư']], en: [['TRANSIT TIME', '22–28 days'], ['CARGO TYPE', 'FCL 20\u2019/40\u2019 · LCL'], ['PORTS', 'LAX · SAV · HOU · NYC'], ['LCL CONSOL', 'Weekly, Wednesday']] }
+  },
+  {
+    vi: ['Chuyển phát nhanh quốc tế DHL · FedEx · UPS', 'U&I Express là đại lý uỷ quyền của DHL, FedEx và UPS tại Việt Nam. Chúng tôi nhận hàng tận nơi, hoàn thiện chứng từ xuất khẩu, đóng gói theo chuẩn hãng và bàn giao trực tiếp cho hãng trong ngày.', 'Với 11 kho tại Hoa Kỳ và đội trucking riêng, U&I xử lý được cả những lô cần lưu kho, gom hàng hoặc phân phối nội địa Mỹ sau thông quan — điều dịch vụ chuyển phát thuần tuý không làm được.'],
+    en: ['International express — DHL · FedEx · UPS', 'U&I Express is an authorised DHL, FedEx and UPS agent in Vietnam. We collect at your door, prepare export documents, pack to carrier standard and hand over to the carrier the same day.', 'With 11 US warehouses and our own trucking, we also cover shipments that need storage, consolidation or US domestic distribution after clearance — something pure express cannot do.'],
+    specs: { vi: [['THỜI GIAN VẬN CHUYỂN', '2–5 ngày làm việc'], ['TRỌNG LƯỢNG', 'Từ 0,5 kg trở lên'], ['PHẠM VI', 'Hơn 200 quốc gia'], ['NHẬN HÀNG', 'Tận nơi, trong ngày']], en: [['TRANSIT TIME', '2–5 business days'], ['WEIGHT', 'From 0.5 kg'], ['COVERAGE', '200+ countries'], ['PICKUP', 'Door, same day']] }
+  },
+  {
+    vi: ['Khai báo hải quan xuất – nhập', 'Đội ngũ khai thuê hải quan của U&I xử lý tờ khai xuất, tờ khai nhập, C/O form B/EUR.1, kiểm dịch thực vật và hun trùng cho hàng gỗ, nông sản, thuỷ sản.', 'Ở đầu Hoa Kỳ, U&I phối hợp với customs broker được cấp phép để làm ISF, entry và xử lý các trường hợp bị CBP kiểm hoá.'],
+    en: ['Customs brokerage — import & export', 'Our licensed customs team files export and import declarations, C/O form B/EUR.1, phytosanitary certificates and fumigation for wood, agricultural and seafood cargo.', 'On the US side, U&I works with a licensed customs broker for ISF, entry filing and handling CBP examinations.'],
+    specs: { vi: [['THỜI GIAN KHAI', 'Trong 4 giờ làm việc'], ['CHỨNG TỪ', 'C/O · Kiểm dịch · Hun trùng'], ['ĐẦU MỸ', 'ISF · Entry · CBP exam'], ['HỖ TRỢ', 'Tư vấn HS code miễn phí']], en: [['FILING TIME', 'Within 4 business hours'], ['DOCUMENTS', 'C/O · Phyto · Fumigation'], ['US SIDE', 'ISF · Entry · CBP exam'], ['SUPPORT', 'Free HS code advisory']] }
+  },
+  {
+    vi: ['Trucking & giao hàng chặng cuối tại Hoa Kỳ', 'Đội xe và mạng lưới đối tác vận tải của U&I phủ 48 bang, chuyên giao hàng vào các trung tâm phân phối của Amazon, Walmart và Ashley theo lịch hẹn (appointment).', 'Mọi chuyến xe đều có GPS và ảnh bằng chứng giao hàng gửi về cho khách hàng ngay khi hoàn tất.'],
+    en: ['US trucking & final-mile delivery', 'Our fleet and carrier partners cover 48 states, specialising in appointment deliveries into Amazon, Walmart and Ashley distribution centres.', 'Every run is GPS-tracked, with proof-of-delivery photos sent to you the moment it is completed.'],
+    specs: { vi: [['PHẠM VI', '48 bang Hoa Kỳ'], ['LOẠI XE', 'FTL · LTL · Drayage'], ['GIAO DC', 'Amazon · Walmart · Ashley'], ['THEO DÕI', 'GPS + ảnh POD']], en: [['COVERAGE', '48 US states'], ['EQUIPMENT', 'FTL · LTL · Drayage'], ['DC DELIVERY', 'Amazon · Walmart · Ashley'], ['TRACKING', 'GPS + POD photos']] }
+  },
+  {
+    vi: ['Kho CFS & lưu kho tại Hoa Kỳ', 'U&I khai thác 11 kho tại Hoa Kỳ, từ Carson và Los Angeles ở bờ Tây đến Savannah, Atlanta và New Jersey ở bờ Đông, phục vụ gom hàng, dán nhãn, kiểm đếm và lưu kho ngắn hạn.', 'Kho có hệ thống quản lý tồn kho trực tuyến, khách hàng xem được số lượng thực tế và lịch xuất nhập theo thời gian thực.'],
+    en: ['US CFS & warehousing', 'U&I operates 11 warehouses across the USA, from Carson and Los Angeles on the West Coast to Savannah, Atlanta and New Jersey on the East, covering consolidation, labelling, counting and short-term storage.', 'Each site runs an online inventory system so you can see real stock levels and inbound/outbound schedules in real time.'],
+    specs: { vi: [['SỐ KHO', '11 địa điểm'], ['DỊCH VỤ', 'Gom hàng · Dán nhãn · Lưu kho'], ['LƯU KHO MIỄN PHÍ', '15 ngày đầu'], ['QUẢN LÝ', 'Cổng tồn kho trực tuyến']], en: [['SITES', '11 locations'], ['SERVICES', 'Consol · Labelling · Storage'], ['FREE STORAGE', 'First 15 days'], ['SYSTEM', 'Online inventory portal']] }
+  },
+  {
+    vi: ['E-pack, Amazon FBA & fulfillment', 'Giải pháp dành cho nhà bán hàng thương mại điện tử: gửi hàng vào kho FBA theo đúng chuẩn ghi nhãn của Amazon, hoặc lưu tại kho U&I và fulfill từng đơn theo ngày.', 'U&I cũng nhận xử lý hàng trả (returns), kiểm tra chất lượng và đóng gói lại trước khi đưa hàng trở lại kênh bán.'],
+    en: ['E-pack, Amazon FBA & fulfilment', 'Built for e-commerce sellers: inbound to Amazon FBA with fully compliant labelling, or store at a U&I warehouse and fulfil orders daily.', 'We also process returns, run quality checks and repack before goods go back on sale.'],
+    specs: { vi: [['THỜI GIAN', '5–8 ngày vào FBA'], ['DỊCH VỤ', 'FBA · Dropship · Fulfillment'], ['XỬ LÝ ĐƠN', 'Trong ngày làm việc'], ['HÀNG TRẢ', 'Kiểm tra & đóng gói lại']], en: [['LEAD TIME', '5–8 days into FBA'], ['SERVICES', 'FBA · Dropship · Fulfilment'], ['ORDER CUTOFF', 'Same business day'], ['RETURNS', 'QC & repack']] }
+  }
+];
+
+const SVCTAG = [
+  ['Đặt chỗ trực tiếp hơn 20 hãng bay, ưu tiên tải tuyến SGN → LAX, ORD, JFK và SEA.', 'Direct allocation with 20+ airlines, priority space on SGN → LAX, ORD, JFK and SEA.'],
+  ['FCL và LCL đi Los Angeles, Savannah, Houston, New York — gom hàng LCL hằng tuần.', 'FCL and LCL to Los Angeles, Savannah, Houston and New York — weekly LCL consolidation.'],
+  ['Giải pháp nhanh nhất cho hàng mẫu, tài liệu và lô hàng gấp đi hơn 200 quốc gia.', 'The fastest option for samples, documents and urgent shipments to 200+ countries.'],
+  ['Khai báo xuất – nhập hai đầu Việt Nam và Hoa Kỳ, kèm C/O, kiểm dịch và hun trùng.', 'Export and import filing on both the Vietnam and US side, with C/O, phyto and fumigation.'],
+  ['Giao hàng chặng cuối phủ 48 bang, chuyên vào DC của Amazon, Walmart và Ashley.', 'Final-mile delivery across 48 states, specialising in Amazon, Walmart and Ashley DCs.'],
+  ['11 kho khai thác tại Hoa Kỳ cho gom hàng, dán nhãn, lưu kho và xử lý hàng trả.', '11 operating US warehouses for consolidation, labelling, storage and returns.'],
+  ['Đưa hàng vào Amazon FBA đúng chuẩn nhãn, hoặc fulfill từng đơn từ kho U&I tại Mỹ.', 'Compliant inbound to Amazon FBA, or per-order fulfilment from our US warehouses.']
+];
+
+const NEWS = [
+  { tag: ['TUYẾN HOA KỲ', 'US LANE'], vi: ['U&I mở thêm chuyến gom hàng LCL đi Savannah mỗi tuần', 'Từ tháng 9/2026, hàng LCL đi bờ Đông Hoa Kỳ được gom cố định vào thứ Tư tại kho Tân Bình, rút ngắn 4 ngày so với lịch cũ.', '28/08/2026'], en: ['U&I adds a weekly LCL consolidation to Savannah', 'From September 2026, LCL cargo to the US East Coast consolidates every Wednesday at our Tan Binh warehouse, cutting 4 days off the previous schedule.', '28 Aug 2026'] },
+  { tag: ['KHO BÃI', 'WAREHOUSING'], vi: ['Kho CFS thứ 11 tại Kent, Washington đi vào hoạt động', 'Kho 4.500 m² phục vụ khách hàng khu vực Tây Bắc Hoa Kỳ, kết nối trực tiếp cảng Seattle và Tacoma.', '15/08/2026'], en: ['11th CFS warehouse opens in Kent, Washington', 'A 4,500 m² facility serving the US Northwest, connected directly to the ports of Seattle and Tacoma.', '15 Aug 2026'] },
+  { tag: ['QUY ĐỊNH', 'REGULATION'], vi: ['Cập nhật quy định ghi nhãn hàng gỗ nội thất xuất Hoa Kỳ', 'Hướng dẫn mới về chứng nhận Lacey Act và cách khai báo nguồn gốc gỗ để tránh bị CBP giữ hàng.', '02/08/2026'], en: ['New labelling rules for wooden furniture into the USA', 'Updated guidance on Lacey Act declarations and how to document timber origin to avoid CBP holds.', '02 Aug 2026'] }
+];
+
+class Component extends DCLogic {
+  state = { page: 'home', device: 'desktop', lang: 'vi', wide: (typeof window !== 'undefined' ? window.innerWidth >= 1060 : true), menuOpen: false, svcPage: 2 };
+
+  componentDidMount() {
+    this._measure = () => {
+      const el = this.siteEl;
+      const w = (el && (el.clientWidth || el.getBoundingClientRect().width)) || window.innerWidth;
+      if (!w) return false;
+      const wide = w >= 1060;
+      if (wide !== this.state.wide) this.setState({ wide: wide, menuOpen: false });
+      return !!(el && el.clientWidth);
+    };
+    let tries = 0;
+    const attach = () => {
+      if (this.siteEl && !this._ro && typeof ResizeObserver !== 'undefined') {
+        this._ro = new ResizeObserver(() => this._measure());
+        this._ro.observe(this.siteEl);
+      }
+      const ok = this._measure();
+      if ((!ok || !this._ro) && tries++ < 25) setTimeout(attach, tries < 5 ? 30 : 200);
+    };
+    attach();
+    this._onResize = () => this._measure();
+    window.addEventListener('resize', this._onResize);
+    this._countKey = this.state.page + '|' + this.state.lang;
+    this._countUp();
+  }
+  componentDidUpdate() {
+    const key = this.state.page + '|' + this.state.lang;
+    if (key !== this._countKey) { this._countKey = key; this._countUp(); }
+  }
+  componentWillUnmount() {
+    if (this._ro) this._ro.disconnect();
+    if (this._onResize) window.removeEventListener('resize', this._onResize);
+  }
+
+  _countUp() {
+    if (!this.siteEl) return;
+    const els = this.siteEl.querySelectorAll('[data-count]');
+    els.forEach((el, i) => {
+      const to = parseInt(el.getAttribute('data-count'), 10);
+      const suffix = el.getAttribute('data-suffix') || '';
+      if (!to) return;
+      const start = performance.now(), dur = 1100 + i * 90;
+      const tick = now => {
+        const p = Math.min(1, (now - start) / dur);
+        const e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(to * e) + (p === 1 ? suffix : '');
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  go(page) {
+    return e => {
+      if (e && e.preventDefault) e.preventDefault();
+      this.setState({ page: page, menuOpen: false });
+      if (this.siteEl) {
+        if (this.state.device === 'mobile') this.siteEl.scrollTop = 0;
+        else window.scrollTo(0, 0);
+      }
+    };
+  }
+
+  _scrollTop() {
+    if (this.state.device === 'mobile') { if (this.siteEl) this.siteEl.scrollTop = 0; }
+    else window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  scrollTo(id) {
+    return e => {
+      if (e && e.preventDefault) e.preventDefault();
+      const needNav = this.state.page !== 'home';
+      this.setState({ page: 'home', menuOpen: false });
+      const run = () => {
+        const el = this.siteEl && this.siteEl.querySelector('#' + id);
+        if (!el) return;
+        if (this.state.device === 'mobile') {
+          this.siteEl.scrollTop += el.getBoundingClientRect().top - this.siteEl.getBoundingClientRect().top - 66;
+        } else {
+          window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 88, behavior: 'smooth' });
+        }
+      };
+      setTimeout(run, needNav ? 90 : 10);
+    };
+  }
+
+  goSvc(i) {
+    return e => {
+      if (e && e.preventDefault) e.preventDefault();
+      this.setState({ page: 'service', svcPage: i, svc: i, menuOpen: false });
+      this._scrollTop();
+    };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const t = s.lang === 'vi' ? VI : EN;
+    const L = s.lang === 'vi' ? 0 : 1;
+    const pick = o => (s.lang === 'vi' ? o.vi : o.en);
+
+    const navDefs = [
+      ['navHome', 'home', 'top'], ['navAbout', 'about', 'about'], ['navServices', 'services', 'services'],
+      ['navNetwork', 'network', 'network'], ['navNews', 'news', 'news'], ['navContact', 'contact', 'contact']
+    ];
+    const nav = navDefs.map(d => ({
+      label: t[d[0]], href: '#' + d[1],
+      go: d[2] === 'top' ? this.go('home') : this.scrollTo(d[2]),
+      style: 'color:' + (s.page === 'home' && d[2] === 'top' ? '#C81E1E' : '#1B3A6B') + ';font-weight:' + (s.page === 'home' && d[2] === 'top' ? 700 : 500) + ';white-space:nowrap;transition:color .15s ease'
+    }));
+
+    const tab = active => 'padding:7px 13px;border:0;border-radius:999px;background:' + (active ? '#2E6BB8' : 'rgba(255,255,255,.08)') + ';color:' + (active ? '#fff' : '#9FBEE4') + ";font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:600;cursor:pointer";
+    const pageDefs = [['home', s.lang === 'vi' ? 'Trang chủ' : 'Home'], ['service', s.lang === 'vi' ? 'Chi tiết dịch vụ' : 'Service detail']];
+    const pages = pageDefs.map(p => ({ label: p[1], go: this.go(p[0]), tabStyle: tab(s.page === p[0]) }));
+
+    const devTab = active => 'display:flex;align-items:center;padding:7px 14px;border:0;border-radius:999px;background:' + (active ? '#fff' : 'transparent') + ';color:' + (active ? '#1B3A6B' : '#9FBEE4') + ";font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:700;cursor:pointer";
+    const mobile = s.device === 'mobile';
+
+    const langBtn = active => 'padding:8px 11px;border:0;background:' + (active ? '#1B3A6B' : '#fff') + ';color:' + (active ? '#fff' : '#8595AD') + ";font-family:'Be Vietnam Pro',sans-serif;font-size:12px;font-weight:700;cursor:pointer";
+
+    const stats = [
+      { to: 15, suffix: '+', display: '15+', label: s.lang === 'vi' ? 'Năm kinh nghiệm' : 'Years of experience' },
+      { to: 6, suffix: '', display: '6', label: s.lang === 'vi' ? 'Chi nhánh' : 'Branches' },
+      { to: 150, suffix: '', display: '150', label: s.lang === 'vi' ? 'Nhân viên' : 'Staff' },
+      { to: 11, suffix: '', display: '11', label: s.lang === 'vi' ? 'Kho tại Hoa Kỳ' : 'US warehouses' },
+      { to: 200, suffix: '+', display: '200+', label: s.lang === 'vi' ? 'Quốc gia phục vụ' : 'Countries served' }
+    ];
+
+
+    const services = SERVICES.map((x, i) => ({ icon: x.icon, title: pick(x)[0], desc: pick(x)[1], go: this.goSvc(i) }));
+    const sp = SVCPAGE[s.svcPage] || SVCPAGE[2];
+    const spv = pick(sp);
+    const news = NEWS.map((n, i) => ({ tag: n.tag[L], title: pick(n)[0], desc: pick(n)[1], date: pick(n)[2], slot: 'uie-news-' + i }));
+    const twoCol = !(mobile || !s.wide);
+    const STEPICON = ['call', 'local_shipping', 'description', 'inventory_2', 'scale', 'receipt_long', 'flight_takeoff', 'task_alt'];
+    const PHASE = s.lang === 'vi'
+      ? ['TẠI VIỆT NAM', 'TẠI VIỆT NAM', 'CHỨNG TỪ', 'TẠI KHO U&I', 'TẠI KHO U&I', 'CHỨNG TỪ', 'BÀN GIAO HÃNG', 'ĐẾN HOA KỲ']
+      : ['IN VIETNAM', 'IN VIETNAM', 'DOCUMENTS', 'AT U&I WAREHOUSE', 'AT U&I WAREHOUSE', 'DOCUMENTS', 'CARRIER HANDOVER', 'INTO THE USA'];
+    const steps = STEPS.map((x, i) => {
+      const last = i === STEPS.length - 1;
+      const endOfCol = twoCol ? (i === 3 || last) : last;
+      return {
+        n: String(i + 1).padStart(2, '0'), title: pick(x)[0], desc: pick(x)[1],
+        icon: STEPICON[i], phase: PHASE[i],
+        node: 'width:44px;height:44px;flex:0 0 auto;border-radius:12px;display:grid;place-items:center;background:' + (last ? '#C81E1E' : '#1B3A6B') + ';color:#fff;box-shadow:0 6px 16px rgba(27,58,107,.22)',
+        line: endOfCol ? 'display:none' : 'flex:1;width:2px;background:linear-gradient(#D9E3F2,#EDF1F7);margin:8px 0'
+      };
+    });
+    const warehouses = WAREHOUSES.map(w => ({ city: w[0], addr: w[1] }));
+    const socials = ['public', 'chat', 'business_center', 'play_circle'];
+
+    const globalFacts = [
+      { v: '200+', l: s.lang === 'vi' ? 'Quốc gia & vùng lãnh thổ' : 'Countries & territories' },
+      { v: '2.400+', l: s.lang === 'vi' ? 'Đại lý WCA thẩm định' : 'Vetted WCA agents' },
+      { v: '48', l: s.lang === 'vi' ? 'Bang Hoa Kỳ có trucking' : 'US states covered' }
+    ];
+
+    const svcSpecs = (s.lang === 'vi' ? sp.specs.vi : sp.specs.en).map(x => ({ l: x[0], v: x[1] }));
+
+    const benefitsSrc = [
+      { vi: ['Giá hợp đồng đại lý', 'Chiết khấu theo sản lượng của U&I, thấp hơn giá công bố của hãng 25–45%.'], en: ['Agent contract rates', 'Volume discounts 25–45% below carrier list prices.'] },
+      { vi: ['Nhận hàng tận nơi trong ngày', 'Xe U&I lấy hàng tại TP. HCM và Bình Dương, không phụ phí pickup.'], en: ['Same-day door pickup', 'U&I collects in HCMC and Binh Duong with no pickup surcharge.'] },
+      { vi: ['Chứng từ do U&I lo', 'Invoice, packing list, C/O và tờ khai xuất — khách chỉ cần cung cấp thông tin hàng.'], en: ['Documents handled for you', 'Invoice, packing list, C/O and export declaration prepared by U&I.'] },
+      { vi: ['Cân lại minh bạch', 'Cân và đo tại kho, báo chênh lệch trước khi phát hành vận đơn.'], en: ['Transparent re-weighing', 'Weighed at our warehouse; differences reported before AWB issuance.'] },
+      { vi: ['Xử lý hàng đặc thù', 'Hàng pin, mỹ phẩm, thực phẩm khô, hàng giá trị cao — tư vấn quy định từng nước.'], en: ['Restricted cargo expertise', 'Batteries, cosmetics, dry food, high-value goods — country rules advised upfront.'] },
+      { vi: ['Một đầu mối theo suốt lô hàng', 'Chuyên viên phụ trách riêng, cập nhật qua Zalo/email đến khi có POD.'], en: ['One dedicated contact', 'A named specialist updates you by Zalo/email until POD.'] }
+    ];
+    const benefits = benefitsSrc.map(b => ({ t: pick(b)[0], d: pick(b)[1] }));
+
+    const svcFlowSrc = [
+      { icon: 'call', vi: ['Nhận yêu cầu & báo giá', 'Phản hồi giá và thời gian trong 2–4 giờ làm việc.'], en: ['Request & quote', 'Rates and transit time confirmed within 2–4 business hours.'] },
+      { icon: 'local_shipping', vi: ['Lấy hàng tận nơi', 'Xe đến theo giờ hẹn, kiểm đếm và niêm phong tại chỗ.'], en: ['Door pickup', 'Collection at the agreed slot, counted and sealed on site.'] },
+      { icon: 'inventory', vi: ['Đóng gói & cân đo', 'Đóng chuẩn hãng, cân lại và xác nhận trọng lượng tính phí.'], en: ['Pack & weigh', 'Carrier-standard packing, re-weigh and confirm chargeable weight.'] },
+      { icon: 'flight_takeoff', vi: ['Bàn giao hãng & bay', 'Vào gateway DHL/FedEx/UPS trong ngày, phát hành e-AWB.'], en: ['Carrier handover', 'Into the DHL/FedEx/UPS gateway same day, e-AWB issued.'] },
+      { icon: 'task_alt', vi: ['Giao & gửi POD', 'Theo dõi đến khi giao thành công, gửi ảnh và chữ ký người nhận.'], en: ['Deliver & POD', 'Tracked to delivery, signature and photo sent to you.'] }
+    ];
+    const svcFlow = svcFlowSrc.map((x, i) => ({ icon: x.icon, n: String(i + 1).padStart(2, '0'), title: pick(x)[0], desc: pick(x)[1] }));
+
+    return {
+      t: t, nav: nav, pages: pages,
+      wide: s.wide && !mobile, narrow: !(s.wide && !mobile),
+      menuOpen: s.menuOpen, menuIcon: s.menuOpen ? 'close' : 'menu',
+      langLabel: s.lang === 'vi' ? 'VN' : 'EN',
+      viBtn: langBtn(s.lang === 'vi'), enBtn: langBtn(s.lang === 'en'),
+      deskTabStyle: devTab(!mobile), mobTabStyle: devTab(mobile),
+      frameOuter: mobile ? 'display:flex;justify-content:center;padding:26px 16px 46px' : 'padding:0',
+      frameInner: mobile
+        ? 'width:392px;max-width:100%;height:812px;overflow-y:auto;overflow-x:clip;background:#fff;border:11px solid #14203A;border-radius:40px;box-shadow:0 30px 70px rgba(14,31,61,.32);container-type:inline-size'
+        : 'width:100%;max-width:100%;overflow-x:clip;background:#fff;container-type:inline-size',
+      siteRef: el => { if (el) { this.siteEl = el; if (this._measure) this._measure(); } },
+      isHome: s.page === 'home', isService: s.page === 'service',
+      goHome: this.go('home'), goService: this.go('service'), goContact: this.scrollTo('contact'),
+      spTitle: spv[0], spTag: (SVCTAG[s.svcPage] || SVCTAG[2])[L], spLead1: spv[1], spLead2: spv[2], spCrumb: pick(SERVICES[s.svcPage] || SERVICES[2])[0], news: news,
+      goServices: this.scrollTo('services'),
+      svcTabs: SERVICES.map((x, i) => ({
+        title: pick(x)[0], go: this.goSvc(i),
+        style: 'padding:9px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;font-family:\'Be Vietnam Pro\',sans-serif;font-size:12.5px;font-weight:600;transition:all .15s ease;background:' + (s.svcPage === i ? '#1B3A6B' : '#F4F7FB') + ';color:' + (s.svcPage === i ? '#fff' : '#5A6B84') + ';border:1px solid ' + (s.svcPage === i ? '#1B3A6B' : '#E0E7F2')
+      })),
+      setDesktop: () => this.setState({ device: 'desktop', menuOpen: false }),
+      setMobile: () => this.setState({ device: 'mobile', menuOpen: false }),
+      setVi: () => this.setState({ lang: 'vi' }), setEn: () => this.setState({ lang: 'en' }),
+      toggleLang: () => this.setState({ lang: s.lang === 'vi' ? 'en' : 'vi' }),
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }),
+      stats: stats, services: services, steps: steps, warehouses: warehouses,
+      clientCols: 'repeat(' + (mobile || !s.wide ? 2 : 7) + ',minmax(0,1fr))',
+      heroCols: (mobile || !s.wide) ? '1fr' : 'minmax(0,1.05fr) minmax(0,.95fr)',
+      stepCols: twoCol ? 'repeat(2,minmax(0,1fr))' : '1fr',
+      heroArc: twoCol
+        ? 'position:absolute;right:-3%;top:6%;width:min(52%,680px);opacity:.45;pointer-events:none'
+        : 'position:absolute;right:-8%;bottom:-6%;width:min(72%,420px);opacity:.28;pointer-events:none',
+      lanes: [
+        ['SGN', 'LAX', 'air', s.lang === 'vi' ? '3–5 ngày' : '3–5 days'],
+        ['SGN', 'ORD', 'air', s.lang === 'vi' ? '4–6 ngày' : '4–6 days'],
+        ['SGN', 'LAX', 'sea', s.lang === 'vi' ? '22–26 ngày' : '22–26 days'],
+        ['SGN', 'SAV', 'sea', s.lang === 'vi' ? '26–30 ngày' : '26–30 days'],
+        ['SGN', 'USA', 'exp', s.lang === 'vi' ? '2–5 ngày' : '2–5 days']
+      ].map(l => {
+        const M = {
+          air: { label: s.lang === 'vi' ? 'Hàng không' : 'Air', icon: 'flight', bg: 'rgba(46,107,184,.22)', fg: '#9CC4F0', bd: 'rgba(92,141,208,.45)' },
+          sea: { label: s.lang === 'vi' ? 'Đường biển' : 'Ocean', icon: 'directions_boat', bg: 'rgba(255,255,255,.09)', fg: '#C3D6EF', bd: 'rgba(255,255,255,.2)' },
+          exp: { label: s.lang === 'vi' ? 'Chuyển phát' : 'Express', icon: 'bolt', bg: 'rgba(200,30,30,.24)', fg: '#FFB3B3', bd: 'rgba(200,30,30,.5)' }
+        }[l[2]];
+        return {
+          from: l[0], to: l[1], days: l[3], mode: M.label, icon: M.icon,
+          chip: "display:inline-flex;align-items:center;gap:5px;justify-self:start;padding:5px 10px;border-radius:999px;font-family:'Be Vietnam Pro',sans-serif;font-size:11.5px;font-weight:600;white-space:nowrap;background:" + M.bg + ';color:' + M.fg + ';border:1px solid ' + M.bd
+        };
+      }),
+      socials: socials, globalFacts: globalFacts,
+      svcSpecs: svcSpecs, benefits: benefits, svcFlow: svcFlow,
+    };
+  }
+}
+</script>
+</body>
+</html>
